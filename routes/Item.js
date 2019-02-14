@@ -3,22 +3,13 @@ const router = express.Router();
 
 const Item = require("../models/Item");
 
-const returnItems = () => {};
-
 // Attribue le nouvel ordre de l'item
 const updateOrder = async newListOrder => {
   // map array to promises
   const promises = newListOrder.map((item, i) => {
     return new Promise(async (resolve, reject) => {
-      const dbItem = await Item.findById(item._id);
-      // Si l'item est trouvé
-      if (dbItem) {
-        dbItem.order = i;
-        await dbItem.save();
-        resolve(true);
-      } else {
-        reject(false);
-      }
+      const result = await Item.findOneAndUpdate({ _id: item._id }, { order: i });
+      resolve(true);
     });
   });
   // wait until all promises are resolved
